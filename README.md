@@ -20,3 +20,14 @@ But what an app can surely do is to:
 2. Look up suitable family hike's.
 3. Coordinate a play date with a parent
 4. **Anticipate** and ask me questions **only when needed**
+
+
+**Components:**
+***Secretary engine -***
+* This is where you write down your wishes
+* This is the app that helps you define what you want.
+* This is the app that helps you define the practical stages to achieve what you want.
+
+***Autoscripts -***
+* Many little apps that take all computable tasks of your back.
+* Scraping is a big portion here
