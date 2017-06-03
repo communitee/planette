@@ -22,7 +22,8 @@ But what an app can surely do is to:
 4. **Anticipate** and ask me questions **only when needed**
 
 
-**Components:**
+**Components:** 
+
 ***Secretary engine -***
 * This is where you write down your wishes
 * This is the app that helps you define what you want.
@@ -31,3 +32,9 @@ But what an app can surely do is to:
 ***Autoscripts -***
 * Many little apps that take all computable tasks of your back.
 * Scraping is a big portion here
+
+**Differentiator:**
+
+* Get out the browser/selenium and become GUI automation DSL
+* Become a DSL with which anyone can write their ***Autoscript***.
+  doing that will allow us to block/query exactly what a script does
