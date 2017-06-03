@@ -1,11 +1,11 @@
-# Communitee > Family
+# Communitee > Planette
 
-Family management helper application.
+Life mission management helper application.
 
 **Purpose**
 
-Having a family(kids included of course) is by far the heaviest project I've ever had.
-We have 2 kids(ages 2 and 5).
+Those who believe in man's free choice will agree with me that a happy and fulfilled life involves planning.
+This is for you!
 
 * Kids need to be occupied...all the time...When they aren't, they mess *someone*'s day up...
 * Kids need to go to the doctor(routine stuff plus sicknesses)...If they don't, either something nasty happens or *someone*'s conscience starts hurting...more the latter..
