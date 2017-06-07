@@ -14,7 +14,7 @@ package object domain {
     }
     type IOperation[A, B] = A => M[B]
     type ParamlessOperation[A] = () => M[A]
-    type VoidOperation[A] = A => M[Unit]
+    type VoidOperation[A] = M[A] => M[Unit]
   }
 
   trait AuthenticatedOperations extends CommonOperations{

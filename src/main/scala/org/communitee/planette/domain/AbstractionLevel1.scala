@@ -16,17 +16,19 @@ trait AbstractionLevel1 extends CommonOperations with AbstractionLevel1Aggregate
 
   def deleteTask: IOperation[InfoForTaskDeletion, Task]
 
-  def makeTaskFailureEvent: IOperation[TaskFailureOutcome, TaskFailedEvent]
+  def makeTaskFailureEvent: IOperation[TaskFailureOutcome, Event]
+
+  def processTask: IOperation[Task,TaskOutcome]
 
   def performTask: IOperation[Task, TaskOutcome] = { task => {
-    val outcome = performTask(task)
+    val outcome = processTask(task)
     outcome.map { o =>
       o match {
         case failure: TaskFailureOutcome =>
           for {
             event <- makeTaskFailureEvent(failure)
-            _ <- fireEvent(event)
-          } yield event
+            eventOutcome <- fireEvent(event)
+          } yield eventOutcome
       }
     }
     outcome
@@ -39,9 +41,11 @@ trait AbstractionLevel1 extends CommonOperations with AbstractionLevel1Aggregate
 
   def getEventRegistrations: IOperation[Event, List[EventRegistration]]
 
-  def fireEvent: VoidOperation[Event]
+  def fireEvent: IOperation[Event, EventOutcome]
 
-  def notifyUser[E <: Event]: IOperation[E, Notification[E]]
+  def createEventNotification[E <: Event]: IOperation[E, Notification[E]]
+
+  def notifyUser[E <: Event]: VoidOperation[Notification[E]]
 
   def askUserFor[A]: ParamlessOperation[A]
 
@@ -51,6 +55,7 @@ trait AbstractionLevel1Aggregate {
   type Task
   type InfoForTaskCreation
   type InfoForTaskUpdate
+
   type InfoForTaskDeletion
   type TaskOutcome
   type TaskFailureOutcome <: TaskOutcome
@@ -62,6 +67,7 @@ trait AbstractionLevel1Aggregate {
   type InfoForRoutineDeletion
 
   type Event
+  type EventOutcome
   type InfoForEventUpdate
   type InfoForEventCreation
   type EventRegistration
