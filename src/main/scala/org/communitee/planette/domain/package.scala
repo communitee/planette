@@ -13,13 +13,14 @@ package object domain {
       def get(): T
     }
     type IOperation[A, B] = A => M[B]
-    type Operation[A] = () => M[A]
+    type ParamlessOperation[A] = () => M[A]
+    type VoidOperation[A] = A => M[Unit]
   }
 
   trait AuthenticatedOperations extends CommonOperations{
     type AuthenticationToken
     type AuthenticatedIOperation[A,B] = AuthenticationToken => IOperation[A,B]
-    type AuthenticatedOperation[B] = AuthenticationToken => Operation[B]
+    type AuthenticatedOperation[B] = AuthenticationToken => ParamlessOperation[B]
   }
 
   trait Monadic[T] {
