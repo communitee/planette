@@ -4,11 +4,14 @@ package org.communitee.planette.domain
   * Created by yoav on 5/5/17.
   */
 trait AbstractionLevel1 extends CommonOperations with AbstractionLevel1Aggregate {
+
   def createRoutine: IOperation[InfoForRoutineCreation, Routine]
 
   def updateRoutine: IOperation[InfoForRoutineUpdate, Routine]
 
   def deleteRoutine: IOperation[InfoForRoutineDeletion, Routine]
+
+  def runRoutine[Container[Task]]: IOperation[Container[Task], RoutineOutcomeIfAny]
 
   def createTask: IOperation[InfoForTaskCreation, Task]
 
@@ -16,24 +19,13 @@ trait AbstractionLevel1 extends CommonOperations with AbstractionLevel1Aggregate
 
   def deleteTask: IOperation[InfoForTaskDeletion, Task]
 
-  def makeTaskFailureEvent: IOperation[TaskFailureOutcome, Event]
+  def performTask: IOperation[Task, TaskOutcome]
 
-  def processTask: IOperation[Task,TaskOutcome]
+  def getSchedule: IOperation[List[Task], Schedule]
 
-  def performTask: IOperation[Task, TaskOutcome] = { task => {
-    val outcome = processTask(task)
-    outcome.map { o =>
-      o match {
-        case failure: TaskFailureOutcome =>
-          for {
-            event <- makeTaskFailureEvent(failure)
-            eventOutcome <- fireEvent(event)
-          } yield eventOutcome
-      }
-    }
-    outcome
-  }
-  }
+  def getScheduleDescription: IOperation[Schedule, ScheduleDescription[Schedule]]
+
+  def getScheduleExplanation: IOperation[Schedule, ScheduleExplanation[Schedule]]
 
   def createEvent: IOperation[InfoForEventCreation, Event]
 
@@ -41,11 +33,13 @@ trait AbstractionLevel1 extends CommonOperations with AbstractionLevel1Aggregate
 
   def getEventRegistrations: IOperation[Event, List[EventRegistration]]
 
-  def fireEvent: IOperation[Event, EventOutcome]
+  def fireEvent: IOperation[Event, EventOutcomeIfAny]
+
+  def getUserURL: IOperation[EventRegistration, UserURL]
 
   def createEventNotification[E <: Event]: IOperation[E, Notification[E]]
 
-  def notifyUser[E <: Event]: VoidOperation[Notification[E]]
+  def notifyUser[E <: Event]: VoidOperation[(UserURL, Notification[E])]
 
   def askUserFor[A]: ParamlessOperation[A]
 
@@ -61,13 +55,13 @@ trait AbstractionLevel1Aggregate {
   type TaskFailureOutcome <: TaskOutcome
 
   type Routine
-  type RoutineOutcome
+  type RoutineOutcomeIfAny
   type InfoForRoutineUpdate
   type InfoForRoutineCreation
   type InfoForRoutineDeletion
 
   type Event
-  type EventOutcome
+  type EventOutcomeIfAny
   type InfoForEventUpdate
   type InfoForEventCreation
   type EventRegistration
@@ -75,9 +69,12 @@ trait AbstractionLevel1Aggregate {
   type TaskFailedEvent <: Event
 
   type Notification[E <: Event]
+  type UserURL
 
   type Person
   type Schedule
+  type ScheduleDescription[Schedule]
+  type ScheduleExplanation[Schedule]
 }
 
 trait AbstractionLevel1BluePrint extends AbstractionLevel1 with AbstractOperations {
