@@ -44,5 +44,6 @@ But what an app can surely do is to:
 Salesman, Product Manager, Developer, QA: They are all different perspectives of the same goal.
 Each of them should be implemented in the following vectors:
 Salesman -> Product Manager -> Developer
+
 All(Separately) <-QA
 
