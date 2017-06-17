@@ -38,3 +38,11 @@ But what an app can surely do is to:
 * Get out the browser/selenium and become GUI automation DSL
 * Become a DSL with which anyone can write their ***Autoscript***.
   doing that will allow us to block/query exactly what a script does
+
+**SPEQ paradigm:**
+
+Salesman, Product Manager, Developer, QA: They are all different perspectives of the same goal.
+Each of them should be implemented in the following vectors:
+Salesman -> Product Manager -> Developer
+All(Separately) <-QA
+
