@@ -1,4 +1,6 @@
-package org.communitee.planette.domain
+package org.communitee.planette.abstraction.salesman
+
+import org.communitee.planette.domain.{AbstractOperations, CommonOperations}
 
 /**
   * Created by yoav on 5/5/17.
@@ -29,7 +31,7 @@ trait AbstractionLevel1 extends CommonOperations with AbstractionLevel1Aggregate
 
   def createEvent: IOperation[InfoForEventCreation, Event]
 
-  def registerToEvent: IOperation[InfoForEventUpdate, EventRegistration]
+  def registerToEvent: IOperation[InfoForEventRegistration, EventRegistration]
 
   def getEventRegistrations: IOperation[Event, List[EventRegistration]]
 
@@ -62,7 +64,7 @@ trait AbstractionLevel1Aggregate {
 
   type Event
   type EventOutcomeIfAny
-  type InfoForEventUpdate
+  type InfoForEventRegistration
   type InfoForEventCreation
   type EventRegistration
 
@@ -79,32 +81,43 @@ trait AbstractionLevel1Aggregate {
 
 trait AbstractionLevel1BluePrint extends AbstractionLevel1 with AbstractOperations {
 
-  def transform[A, B](a: A): M[B]
 
   override type InfoForRoutineCreation = M[Task]
 
   //The app has Tasks; A task can be performed by a routine or on demand
   def createTaskFlow = {
-    val result = for {
+    val createdTasks = for {
       taskInfo <- askUserFor[InfoForTaskCreation]()
       task <- createTask(taskInfo)
     } yield task
 
-    result
+    createdTasks
   }
 
   //The app has routines it executes on a schedule basis
-  def createRoutineFlow(tasks: M[Task]) = {
-    val result = for {
+  def createRoutineFlow = {
+    val createdRoutines = for {
       routine <- createRoutine(createTaskFlow)
     } yield routine
 
-    result
+    createdRoutines
   }
 
-  //The app fires events
+  // The user can register to different types of events
+  def registerToEventFlow = {
+    val createdRegistration = for{
+      eventInfo <- askUserFor[InfoForEventRegistration]()
+      registration <- registerToEvent(eventInfo)
+    } yield registration
+
+    createdRegistration
+  }
+
+  // The app fires events
 
   //The app notifies the user of events he wants/should be updated with
+
   //The app reminds the user of things he wants/should be reminded of
-  //The app can conversate with user <-> the user can conversate with the app
+
+  //The app can converse with user <-> the user can converse with the app
 }

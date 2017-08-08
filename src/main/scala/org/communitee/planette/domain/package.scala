@@ -56,4 +56,6 @@ package object domain {
   }
 
   def mock[A]: A = ???
+
+
 }
