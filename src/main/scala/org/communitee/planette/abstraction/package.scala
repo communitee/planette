@@ -6,7 +6,7 @@ package org.communitee.planette
 package object abstraction {
   trait Term {
     val terms: scala.collection.mutable.MutableList[Term] = scala.collection.mutable.MutableList(this)
-    val neededInoformation: scala.collection.immutable.List[Term] = ???
+    val neededInoformation: scala.collection.immutable.List[Term] = List.empty[Term]
 
     def and[B <: Term](a: B): B = {
       a.terms ++= this.terms
