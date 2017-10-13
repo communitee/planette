@@ -21,12 +21,24 @@ package object talk {
         simpleName.replace("$", "")
 
     }
+
+    def asQuestion = {
+      this.terms.update(0,?)
+      this
+    }
   }
+
+  trait ? extends Term{
+    override def toString: String = "?"
+  }
+
+  object ? extends ?
 
   trait Thing extends Term
 
   trait A extends Term
-
+  object A extends A
+  
   object AImpl {
     implicit class _A(val schedule: Schedule) extends Term with A {
       def a: A = {
@@ -57,12 +69,47 @@ package object talk {
 
     def of: Of = ???
   }
+
+  trait Mean extends Term
+
+  object Mean extends Mean
+
+  object MeanImpl {
+    implicit class _Mean1(val you: You) extends Term with Mean {
+      def mean: Mean = {
+        lazy val meani: Mean = {
+          val  newMean = new Mean{}
+          you and newMean
+        }
+        meani
+      }
+    }
+  }
+
+
+  trait You extends Term
+
+  object You extends You
+
+  object YouImpl {
+    implicit class _You1(val `do`: Do) extends Term with You {
+      def you: You = {
+        lazy val youi: You = {
+          val  newYou = new You{}
+          `do` and newYou
+        }
+        youi
+      }
+    }
+  }
   
   trait I extends Term
 
   object I extends I
 
   trait Would extends Term
+
+  object Would extends Would
 
   object WouldImpl {
     implicit class _Would(val i: I) extends Term with Would {
@@ -75,9 +122,81 @@ package object talk {
       }
 
     }
+
+    implicit class _Would1(val you: You) extends Term with Would {
+      def would: Would = {
+        lazy val wouldi: Would = {
+          val  newWould = new Would{}
+          you and newWould
+        }
+        wouldi
+      }
+
+    }
+  }
+
+  trait What extends Term
+
+  object What extends What
+
+  object WhatImpl {
+    implicit class _What(val you: You) extends Term with What {
+      def what: What = {
+        lazy val whati: What = {
+          val  newWhat = new What{}
+          you and newWhat
+        }
+        whati
+      }
+
+    }
+
+    implicit class _What1(val would: Would) extends Term with What {
+      def what: What = {
+        lazy val whati: What = {
+          val  newWhat = new What{}
+          would and newWhat
+        }
+        whati
+      }
+
+    }
+
+    implicit class _What2(val to: To) extends Term with What {
+      def what: What = {
+        lazy val whati: What = {
+          val  newWhat = new What{}
+          to and newWhat
+        }
+        whati
+      }
+    }
+
+    implicit class _What3(val schedule: Schedule) extends Term with What {
+      def what: What = {
+        lazy val whati: What = {
+          val  newWhat = new What{}
+          schedule and newWhat
+        }
+        whati
+      }
+
+    }
+
+    implicit class _What4(val a: A) extends Term with What {
+      def what: What = {
+        lazy val whati: What = {
+          val  newWhat = new What{}
+          a and newWhat
+        }
+        whati
+      }
+
+    }
   }
   
   trait Like extends Term
+  object Like extends Like
 
   object LikeImpl {
     implicit class _Like(val would: Would) extends Term with Like {
@@ -92,7 +211,11 @@ package object talk {
   }
 
 
-  trait Doctor extends Term
+  trait Doctor extends Term{
+    def s : Doctor = this
+  }
+  
+  object Doctor extends Doctor
 
   object DoctorImpl {
     implicit class _Doctor(val a: A) extends Term with Doctor {
@@ -108,7 +231,8 @@ package object talk {
   }
   
   trait Appointment extends Term
-
+  object Appointment extends Appointment
+  
   object AppointmentImpl {
     implicit class _Appointment(val doctor: Doctor) extends Term with Appointment {
       def appointment: Appointment = {
@@ -145,6 +269,8 @@ package object talk {
   trait TodoList extends List
 
   trait To extends Term
+  
+  object To extends To
 
   object ToImpl {
     implicit class _To(val like: Like) extends Term with To {
@@ -155,12 +281,28 @@ package object talk {
         }
         toi
       }
+    }
+  }
 
+  trait Do extends Term
+
+  object Do extends Do
+
+  object DoImpl {
+    implicit class _Do(val what: What) extends Term with Do {
+      def `do`: Do = {
+        lazy val toi: Do = {
+          val  newDo = new Do{}
+          what and newDo
+        }
+        toi
+      }
     }
   }
 
 
   trait Schedule extends Term
+  object Schedule extends Schedule
 
   object ScheduleImpl {
     implicit class _Schedule(val to: To) extends Term with Schedule {
