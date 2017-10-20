@@ -1,15 +1,30 @@
 package org.communitee
 
+import java.util.concurrent.atomic.AtomicReference
+
 /**
   * Created by yoav on 9/14/17.
   */
 package object talk {
   trait Term {
-    val terms: scala.collection.mutable.MutableList[Term] = scala.collection.mutable.MutableList(this)
-    val neededInoformation: scala.collection.immutable.List[Term] = List.empty[Term]
+    //val terms: scala.collection.mutable.MutableList[Term] = scala.collection.mutable.MutableList(this)
+    def getTerms:scala.collection.immutable.List[Term] = {
+      def getTermsInternal(list: scala.collection.immutable.List[Option[Term]] = List(Some(this))): scala.collection.immutable.List[Option[Term]] = {
+        list.head match {
+          case None =>
+            list.drop(1)
+          case Some(p) =>
+            getTermsInternal(List(p.pred.get) ::: list)
+        }
+      }
 
+      getTermsInternal().map(_.get)
+    }
+
+    val pred = new AtomicReference[Option[Term]](None)
     def and[B <: Term](a: B): B = {
-      a.terms ++= this.terms
+      //a.terms ++= this.terms
+      a.pred.set(Some(this))
       a
     }
 
@@ -22,17 +37,18 @@ package object talk {
 
     }
 
-    def asQuestion = {
-      this.terms.update(0,?)
-      this
+    def ? = {
+      val result = this and QuestionMark //-- Terms are stateful - mutable --> very bad!!!!!!!!!
+
+      result
     }
   }
 
-  trait ? extends Term{
+  trait QuestionMark extends Term{
     override def toString: String = "?"
   }
 
-  object ? extends ?
+  object QuestionMark extends QuestionMark
 
   trait Thing extends Term
 

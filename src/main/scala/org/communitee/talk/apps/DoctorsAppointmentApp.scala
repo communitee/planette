@@ -13,6 +13,9 @@ import WhatImpl._
 import YouImpl._
 import MeanImpl._
 
+
+import scala.List
+
 /**
   *
   * Created by yoav on 9/14/17.
@@ -20,12 +23,12 @@ import MeanImpl._
 object DoctorsAppointmentApp extends Entity with App {
 
   val sentence = I.would.like.to.schedule.a.doctor.s.appointment
-
-  println(sentence.terms.reverse)
-  interpretate(sentence.terms.reverse.toList)
+  import M._
+  println(sentence.getTerms)
+  interpretate(sentence.getTerms)
 
   type Sentence = scala.collection.immutable.List[Term]
-  import scala.collection.mutable.HashMap
+
 
   trait Meaning{
     var isComplete: Boolean
@@ -56,45 +59,50 @@ object DoctorsAppointmentApp extends Entity with App {
     }
   }
 
+}
+
+object M{
+  import org.communitee.talk.apps.DoctorsAppointmentApp.Meaning
+  type Sentence = scala.collection.immutable.List[Term]
+  import scala.collection.mutable.HashMap
   val meanings = HashMap[Sentence, Meaning]()
   meanings(List(I)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.what.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = You.what.?.getTerms
   }
 
   meanings(List(I, Would)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.what.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = You.would.what.?.getTerms
   }
 
   meanings(List(I, Would, Like)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.what.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = You.would.like.to.what.?.getTerms
   }
 
   meanings(List(I, Would, Like, To)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.what.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = You.would.like.to.what.?.getTerms
   }
 
   meanings(List(I, Would, Like, To, Schedule)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.schedule.what.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = You.would.like.to.schedule.what.?.getTerms
   }
 
   meanings(List(I, Would, Like, To, Schedule, A)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.schedule.a.what.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = You.would.like.to.schedule.a.what.?.getTerms
   }
 
   meanings(List(I, Would, Like, To, Schedule, A, Doctor)) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = What.`do`.you.mean.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = What.`do`.you.mean.?.getTerms
   }
 
   meanings(List(I, Would, Like, To, Schedule, A, Doctor, Appointment)) = new Meaning {
     override var isComplete: Boolean = true
-    override var completionQuestions: Sentence = What.`do`.you.mean.asQuestion.terms.reverse.toList
+    override var completionQuestions: Sentence = What.`do`.you.mean.?.getTerms
   }
-
 }
