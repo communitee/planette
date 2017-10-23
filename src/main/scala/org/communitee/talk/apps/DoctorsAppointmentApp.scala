@@ -12,7 +12,7 @@ import AppointmentImpl._
 import WhatImpl._
 import YouImpl._
 import MeanImpl._
-
+import org.communitee.talk.apps.DoctorsAppointmentApp.Sentence
 
 import scala.List
 
@@ -25,22 +25,24 @@ object DoctorsAppointmentApp extends Entity with App {
   val sentence = I.would.like.to.schedule.a.doctor.s.appointment
   import M._
   println(sentence.getTerms)
-  interpretate(sentence.getTerms)
+  val meaning = interpretate(sentence.getTerms)
+  println(meaning)
 
   type Sentence = scala.collection.immutable.List[Term]
 
 
   trait Meaning{
     var isComplete: Boolean
-    var completionQuestions: Sentence
-
+    val completionQuestions: Option[Sentence] = None
+    val terms: Option[Sentence] = None
     override def toString: String = completionQuestions.mkString(" ")
   }
 
   def interpretate(terms: scala.collection.immutable.List[Term]) = {
     def getMeaning(terms: Term*): Option[Meaning] = {
-      if (meanings.contains(terms.toList)){
-        Some(meanings(terms.toList))
+      val sentence = terms.toList.mkString(" ")
+      if (meanings.contains(sentence)){
+        Some(meanings(sentence))
       }else{
         None
       }
@@ -53,7 +55,6 @@ object DoctorsAppointmentApp extends Entity with App {
         case None =>
           (a1._1 ++ a2._1, None)
         case meaning: Option[Meaning] =>
-          println(meaning)
           (a1._1 ++ a2._1, meaning)
       }
     }
@@ -65,44 +66,45 @@ object M{
   import org.communitee.talk.apps.DoctorsAppointmentApp.Meaning
   type Sentence = scala.collection.immutable.List[Term]
   import scala.collection.mutable.HashMap
-  val meanings = HashMap[Sentence, Meaning]()
-  meanings(List(I)) = new Meaning {
+  val meanings = HashMap[String, Meaning]()
+  meanings(List(I).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.what.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(You.what.?.getTerms)
   }
 
-  meanings(List(I, Would)) = new Meaning {
+  meanings(List(I, Would).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.what.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(You.would.what.?.getTerms)
   }
 
-  meanings(List(I, Would, Like)) = new Meaning {
+  meanings(List(I, Would, Like).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.what.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(You.would.like.to.what.?.getTerms)
   }
 
-  meanings(List(I, Would, Like, To)) = new Meaning {
+  meanings(List(I, Would, Like, To).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.what.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(You.would.like.to.what.?.getTerms)
   }
 
-  meanings(List(I, Would, Like, To, Schedule)) = new Meaning {
+  meanings(List(I, Would, Like, To, Schedule).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.schedule.what.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(You.would.like.to.schedule.what.?.getTerms)
   }
 
-  meanings(List(I, Would, Like, To, Schedule, A)) = new Meaning {
+  meanings(List(I, Would, Like, To, Schedule, A).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = You.would.like.to.schedule.a.what.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(You.would.like.to.schedule.a.what.?.getTerms)
   }
 
-  meanings(List(I, Would, Like, To, Schedule, A, Doctor)) = new Meaning {
+  meanings(List(I, Would, Like, To, Schedule, A, Doctor).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = false
-    override var completionQuestions: Sentence = What.`do`.you.mean.?.getTerms
+    override val completionQuestions: Option[Sentence] = Some(What.`do`.you.mean.?.getTerms)
   }
 
-  meanings(List(I, Would, Like, To, Schedule, A, Doctor, Appointment)) = new Meaning {
+  meanings(List(I, Would, Like, To, Schedule, A, Doctor, Appointment).mkString(" ")) = new Meaning {
     override var isComplete: Boolean = true
-    override var completionQuestions: Sentence = What.`do`.you.mean.?.getTerms
+    //override val terms: Option[Sentence] = Some()
+
   }
 }
