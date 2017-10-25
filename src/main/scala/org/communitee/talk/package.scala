@@ -7,24 +7,25 @@ import java.util.concurrent.atomic.AtomicReference
   */
 package object talk {
   trait Term {
-    //val terms: scala.collection.mutable.MutableList[Term] = scala.collection.mutable.MutableList(this)
+
     def getTerms:scala.collection.immutable.List[Term] = {
       def getTermsInternal(list: scala.collection.immutable.List[Option[Term]] = List(Some(this))): scala.collection.immutable.List[Option[Term]] = {
         list.head match {
           case None =>
             list.drop(1)
           case Some(p) =>
-            getTermsInternal(List(p.pred.get) ::: list)
+            getTermsInternal(List(p.predecessor.get) ::: list)
         }
       }
 
       getTermsInternal().map(_.get)
     }
 
-    val pred = new AtomicReference[Option[Term]](None)
+    val predecessor = new AtomicReference[Option[Term]](None)
+    val successor = new AtomicReference[Option[Term]](None)
     def and[B <: Term](a: B): B = {
-      //a.terms ++= this.terms
-      a.pred.set(Some(this))
+      this.successor.set(Some(a))
+      a.predecessor.set(Some(this))
       a
     }
 
@@ -34,12 +35,10 @@ package object talk {
         this.getClass.getInterfaces()(0).getSimpleName
       else
         simpleName.replace("$", "")
-
     }
 
     def ? = {
       val result = this and QuestionMark //-- Terms are stateful - mutable --> very bad!!!!!!!!!
-
       result
     }
   }

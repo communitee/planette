@@ -12,9 +12,7 @@ import AppointmentImpl._
 import WhatImpl._
 import YouImpl._
 import MeanImpl._
-import org.communitee.talk.apps.DoctorsAppointmentApp.Sentence
 
-import scala.List
 
 /**
   *
@@ -28,7 +26,8 @@ object DoctorsAppointmentApp extends Entity with App {
   val meaning = interpretate(sentence.getTerms)
   println(meaning)
 
-  type Sentence = scala.collection.immutable.List[Term]
+  type ImmutableList[B] = scala.collection.immutable.List[B]
+  type Sentence = ImmutableList[Term]
 
 
   trait Meaning{
@@ -38,7 +37,7 @@ object DoctorsAppointmentApp extends Entity with App {
     override def toString: String = completionQuestions.mkString(" ")
   }
 
-  def interpretate(terms: scala.collection.immutable.List[Term]) = {
+  def interpretate(terms: ImmutableList[Term]) = {
     def getMeaning(terms: Term*): Option[Meaning] = {
       val sentence = terms.toList.mkString(" ")
       if (meanings.contains(sentence)){
@@ -64,7 +63,8 @@ object DoctorsAppointmentApp extends Entity with App {
 
 object M{
   import org.communitee.talk.apps.DoctorsAppointmentApp.Meaning
-  type Sentence = scala.collection.immutable.List[Term]
+  type ImmutableList[B] = scala.collection.immutable.List[B]
+  type Sentence = ImmutableList[Term]
   import scala.collection.mutable.HashMap
   val meanings = HashMap[String, Meaning]()
   meanings(List(I).mkString(" ")) = new Meaning {
