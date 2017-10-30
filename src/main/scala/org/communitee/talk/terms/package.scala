@@ -1,11 +1,14 @@
-package org.communitee
+package org.communitee.talk
 
 import java.util.concurrent.atomic.AtomicReference
+
+import org.communitee.talk.meanings._
 
 /**
   * Created by yoav on 9/14/17.
   */
-package object talk {
+package object terms {
+  type ImmutableList[A] = scala.collection.immutable.List[A]
   trait Term {
 
     def getTerms:scala.collection.immutable.List[Term] = {
@@ -29,6 +32,8 @@ package object talk {
       a
     }
 
+    val label: ImmutableList[Label] = List()
+
     override def toString: String = {
       val simpleName = this.getClass.getSimpleName
       if(simpleName.contains("anon"))
@@ -51,7 +56,9 @@ package object talk {
 
   trait Thing extends Term
 
-  trait A extends Term
+  trait A extends Term {
+    override val label = List(Labeless)
+  }
   object A extends A
   
   object AImpl {
@@ -118,11 +125,15 @@ package object talk {
     }
   }
   
-  trait I extends Term
+  trait I extends Term{
+    override val label = List(Speaker)
+  }
 
   object I extends I
 
-  trait Would extends Term
+  trait Would extends Term{
+    override val label = List(FutureAction)
+  }
 
   object Would extends Would
 
@@ -210,7 +221,9 @@ package object talk {
     }
   }
   
-  trait Like extends Term
+  trait Like extends Term {
+    override val label = List(meanings.Like, Similarity)
+  }
   object Like extends Like
 
   object LikeImpl {
@@ -230,7 +243,9 @@ package object talk {
     def s : Doctor = this
   }
   
-  object Doctor extends Doctor
+  object Doctor extends Doctor {
+    override val label = List(meanings.Doctor)
+  }
 
   object DoctorImpl {
     implicit class _Doctor(val a: A) extends Term with Doctor {
@@ -245,7 +260,9 @@ package object talk {
     }
   }
   
-  trait Appointment extends Term
+  trait Appointment extends Term {
+    override val label = List(meanings.Appointment)
+  }
   object Appointment extends Appointment
   
   object AppointmentImpl {
@@ -283,7 +300,9 @@ package object talk {
 
   trait TodoList extends List
 
-  trait To extends Term
+  trait To extends Term {
+    override val label = List(ActionName)
+  }
   
   object To extends To
 
@@ -306,17 +325,19 @@ package object talk {
   object DoImpl {
     implicit class _Do(val what: What) extends Term with Do {
       def `do`: Do = {
-        lazy val toi: Do = {
+        lazy val doi: Do = {
           val  newDo = new Do{}
           what and newDo
         }
-        toi
+        doi
       }
     }
   }
 
 
-  trait Schedule extends Term
+  trait Schedule extends Term {
+    override val label = List(Action)
+  }
   object Schedule extends Schedule
 
   object ScheduleImpl {

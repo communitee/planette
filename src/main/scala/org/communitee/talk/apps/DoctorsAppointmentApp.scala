@@ -1,6 +1,7 @@
 package org.communitee.talk
 package apps
 
+import terms._
 import WouldImpl._
 import LikeImpl._
 import ToImpl._
