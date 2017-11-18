@@ -32,7 +32,9 @@ package object terms {
       a
     }
 
-    val label: ImmutableList[Label] = List()
+    def processLabels: Option[Label] = None
+    val label: AtomicReference[Option[Label]] = new AtomicReference[Option[Label]](None)
+    //def processLabels: Unit = ???
 
     override def toString: String = {
       val simpleName = this.getClass.getSimpleName
@@ -46,6 +48,8 @@ package object terms {
       val result = this and QuestionMark //-- Terms are stateful - mutable --> very bad!!!!!!!!!
       result
     }
+
+    override def equals(obj: scala.Any): Boolean = obj.toString == this.toString
   }
 
   trait QuestionMark extends Term{
@@ -57,10 +61,10 @@ package object terms {
   trait Thing extends Term
 
   trait A extends Term {
-    override val label = List(Labeless)
+    override val processLabels = Some(Labeless)
   }
   object A extends A
-  
+
   object AImpl {
     implicit class _A(val schedule: Schedule) extends Term with A {
       def a: A = {
@@ -124,15 +128,21 @@ package object terms {
       }
     }
   }
-  
+
   trait I extends Term{
-    override val label = List(Speaker)
+    override def processLabels = Some(Speaker)
   }
 
   object I extends I
 
   trait Would extends Term{
-    override val label = List(FutureAction)
+    override def processLabels = successor.get match{
+      case Some(Like) =>
+        Some(Labeless)
+
+      case other =>
+        Some(Future)
+    }
   }
 
   object Would extends Would
@@ -220,9 +230,12 @@ package object terms {
 
     }
   }
-  
+
   trait Like extends Term {
-    override val label = List(meanings.Like, Similarity)
+    override def processLabels = predecessor.get match {
+      case Some(Would) => Some(Wish)
+      case _ => Some(Similarity)
+    }
   }
   object Like extends Like
 
@@ -242,9 +255,9 @@ package object terms {
   trait Doctor extends Term{
     def s : Doctor = this
   }
-  
+
   object Doctor extends Doctor {
-    override val label = List(meanings.Doctor)
+    override val processLabels = Some(meanings.Doctor)
   }
 
   object DoctorImpl {
@@ -259,12 +272,12 @@ package object terms {
 
     }
   }
-  
+
   trait Appointment extends Term {
-    override val label = List(meanings.Appointment)
+    override val processLabels = Some(meanings.Appointment)
   }
   object Appointment extends Appointment
-  
+
   object AppointmentImpl {
     implicit class _Appointment(val doctor: Doctor) extends Term with Appointment {
       def appointment: Appointment = {
@@ -277,7 +290,7 @@ package object terms {
 
     }
   }
-  
+
   trait Task extends Term
 
   trait Create extends Term
@@ -301,9 +314,9 @@ package object terms {
   trait TodoList extends List
 
   trait To extends Term {
-    override val label = List(ActionName)
+    override val processLabels = Some(ActionName)
   }
-  
+
   object To extends To
 
   object ToImpl {
@@ -336,7 +349,7 @@ package object terms {
 
 
   trait Schedule extends Term {
-    override val label = List(Action)
+    override val processLabels = Some(Action)
   }
   object Schedule extends Schedule
 

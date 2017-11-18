@@ -26,7 +26,8 @@ object DoctorsAppointmentApp extends Entity with App {
   println(sentence.getTerms)
   val meaning = interpretate(sentence.getTerms)
   println(meaning)
-
+  val labels = sentence.getTerms.map(_.processLabels)
+  println(labels)
   type ImmutableList[B] = scala.collection.immutable.List[B]
   type Sentence = ImmutableList[Term]
 
@@ -60,6 +61,26 @@ object DoctorsAppointmentApp extends Entity with App {
     }
   }
 
+}
+
+object Kernel{
+
+  import org.communitee.talk.meanings._
+
+  def getTransmissionMeaning(transmission: Transmission): Option[Meaning] = {
+    transmission.foreach(_.processLabels)
+    None
+  }
+
+  def getCourseOfAction(meaning: Meaning): Option[CourseOfAction] = None
+
+  def executeCourseOfAction(courseOfAction: CourseOfAction): Option[Outcome] = None
+
+  def comp(transmission: Transmission) = for{
+    meaning <- getTransmissionMeaning(transmission)
+    course <- getCourseOfAction(meaning)
+    outcome <- executeCourseOfAction(course)
+  } yield (course, outcome)
 }
 
 object M{
@@ -109,3 +130,4 @@ object M{
 
   }
 }
+
