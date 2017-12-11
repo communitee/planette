@@ -6,7 +6,15 @@ package org.communitee.talk
 package object meanings {
   trait Meaning
 
-  trait Label
+  trait Label{
+    override def toString: String = {
+      val simpleName = this.getClass.getSimpleName
+      if(simpleName.contains("anon"))
+        this.getClass.getInterfaces()(0).getSimpleName
+      else
+        simpleName.replace("$", "")
+    }
+  }
 
   trait Scene
 
@@ -20,6 +28,11 @@ package object meanings {
 
   trait Action extends Label
   object Action extends Action
+
+  trait Schedule extends Label
+  object Schedule extends Schedule
+  object SchedulingAction extends Schedule with Action
+
 
   trait State extends Label
 
@@ -44,7 +57,7 @@ package object meanings {
 
   object Similarity extends Label
 
-  object ActionName extends Label
+  object Execute extends Label
 
   case class To()
 

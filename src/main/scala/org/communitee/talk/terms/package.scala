@@ -61,7 +61,7 @@ package object terms {
   trait Thing extends Term
 
   trait A extends Term {
-    override val processLabels = Some(Labeless)
+    override def processLabels = Some(Labeless)
   }
   object A extends A
 
@@ -254,10 +254,13 @@ package object terms {
 
   trait Doctor extends Term{
     def s : Doctor = this
+    override def processLabels = {
+      Some(meanings.Doctor)
+    }
   }
 
   object Doctor extends Doctor {
-    override val processLabels = Some(meanings.Doctor)
+
   }
 
   object DoctorImpl {
@@ -274,7 +277,7 @@ package object terms {
   }
 
   trait Appointment extends Term {
-    override val processLabels = Some(meanings.Appointment)
+    override def processLabels = Some(meanings.Appointment)
   }
   object Appointment extends Appointment
 
@@ -314,7 +317,7 @@ package object terms {
   trait TodoList extends List
 
   trait To extends Term {
-    override val processLabels = Some(ActionName)
+    override def processLabels = Some(Labeless)
   }
 
   object To extends To
@@ -349,7 +352,10 @@ package object terms {
 
 
   trait Schedule extends Term {
-    override val processLabels = Some(Action)
+    override def processLabels = predecessor.get match{
+      case None => Some(meanings.Schedule)
+      case Some(To) => Some(SchedulingAction)
+    }
   }
   object Schedule extends Schedule
 
