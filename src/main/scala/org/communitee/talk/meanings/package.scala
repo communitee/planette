@@ -1,84 +1,73 @@
 package org.communitee.talk
 
+
+
 /**
   * Created by root on 30/10/17.
   */
 package object meanings {
   trait Meaning
 
-  trait Label{
-    override def toString: String = {
-      val simpleName = this.getClass.getSimpleName
-      if(simpleName.contains("anon"))
-        this.getClass.getInterfaces()(0).getSimpleName
-      else
-        simpleName.replace("$", "")
-    }
+
+
+
+  trait Event extends Meaning{
+    type Happening
+    val happening: Happening
+    val location: Location
+    val time: Time
   }
 
-  trait Scene
+  trait Scene extends Meaning {
+    val events: List[Event]
+  }
 
-  object Labeless extends Label
+  trait Scheduler extends Meaning{
+    def make[A<:ScheduleRequest](a: A): Schedulable
+  }
+  trait Schedulable extends Meaning
+  trait ScheduleRequest extends Meaning
+  trait SchedulingScene extends Meaning{
 
-  trait Wishabale extends Label
+    val scheduler: Scheduler
+    val schedulable: Schedulable
 
-  trait Person extends Label
+    def scene:Scene = {
+       new Scene
+          {
+         override val events: List[Event] = List(new Event {
+           override type Happening = ScheduleRequest => Schedulable
+           override val location: Location = Somewhere
 
-  object Speaker extends Person
-
-  trait Action extends Label
-  object Action extends Action
-
-  trait Schedule extends Label
-  object Schedule extends Schedule
-  object SchedulingAction extends Schedule with Action
+           override val happening: ScheduleRequest => Schedulable = scheduler.make
+           override val time: Time = Sometime
+         })
+       }
+    }
 
 
-  trait State extends Label
+  }
 
-  trait Time extends Label
-
-  trait Future extends Time
-  object Future extends Future
-
-  object Past extends Time
-
-  object Present extends Time
-
-  object FutureAction extends Action with Future
-
-  object FutureState extends State with Future
-
-  trait Sentiment extends Label
-
-  object Wish extends Sentiment
-
-  object Like extends Sentiment
-
-  object Similarity extends Label
-
-  object Execute extends Label
 
   case class To()
 
-  trait Profession extends Label
 
-  trait Professional extends Label with Profession
-
-  trait Medicine extends Profession
-
-  object Doctor extends Professional with Medicine
-
-  trait Place extends Label
-
-  trait Meeting extends Label
-
-  trait Appointment extends Meeting with Time with Place
-
-  object Appointment extends Appointment
-
-  trait SentimentRegardingAScene extends Meaning{
+  trait SentimentForAScene extends Meaning{
     val sentiment: Sentiment
     val scene: Scene
   }
+
+  case class SpeakerSentimentForAScene(speaker: Person, sentiment: Sentiment, scene: Scene)
+
+  trait Time extends Meaning
+  trait AbstractTime extends Time
+  object Sometime extends AbstractTime
+  object Future extends AbstractTime
+
+  trait Location extends Meaning
+  trait AbstractLocation extends Location
+  object Somewhere extends AbstractLocation
+
+  trait Person extends Meaning
+  trait Sentiment extends Meaning
 }

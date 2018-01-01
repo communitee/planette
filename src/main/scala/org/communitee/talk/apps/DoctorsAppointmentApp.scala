@@ -13,7 +13,7 @@ import AppointmentImpl._
 import WhatImpl._
 import YouImpl._
 import MeanImpl._
-import org.communitee.talk.meanings.Labeless
+import org.communitee.talk.labels.{Action, Labeless, Person, Sentiment}
 
 
 /**
@@ -37,7 +37,7 @@ object DoctorsAppointmentApp extends Entity with App {
 
 object Kernel{
 
-  import org.communitee.talk.meanings._
+  import org.communitee.talk.meanings.Meaning
 
   def getTransmissionMeaning(transmission: Transmission): Option[Meaning] = {
 //List(d:Person, f:Sentiment, a:Action) :: rest
@@ -45,8 +45,8 @@ object Kernel{
     labels match {
       case (d:Person) :: (f:Sentiment) :: (a:Action) :: rest =>
         println(d)
+        //SpeakerSentimentForAScene(d, f, )
         None
-
       case _ =>
         println("kkkk")
         None

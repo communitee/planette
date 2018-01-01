@@ -2,7 +2,8 @@ package org.communitee.talk
 
 import java.util.concurrent.atomic.AtomicReference
 
-import org.communitee.talk.meanings._
+import org.communitee.talk.labels._
+import org.communitee.talk.meanings
 
 /**
   * Created by yoav on 9/14/17.
@@ -255,7 +256,7 @@ package object terms {
   trait Doctor extends Term{
     def s : Doctor = this
     override def processLabels = {
-      Some(meanings.Doctor)
+      Some(labels.Doctor)
     }
   }
 
@@ -277,7 +278,7 @@ package object terms {
   }
 
   trait Appointment extends Term {
-    override def processLabels = Some(meanings.Appointment)
+    override def processLabels = Some(labels.Appointment)
   }
   object Appointment extends Appointment
 
@@ -353,7 +354,7 @@ package object terms {
 
   trait Schedule extends Term {
     override def processLabels = predecessor.get match{
-      case None => Some(meanings.Schedule)
+      case None => Some(labels.Schedule)
       case Some(To) => Some(SchedulingAction)
     }
   }
