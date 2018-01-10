@@ -43,12 +43,13 @@ object Kernel{
 //List(d:Person, f:Sentiment, a:Action) :: rest
     val labels = transmission.map(_.processLabels).filter(_.isDefined).map(_.get).filterNot(_ == Labeless)
     labels match {
-      case (d:Person) :: (f:Sentiment) :: (a:Action) :: rest =>
-        println(d)
+      case (person:Person) :: (sentiment:Sentiment) :: (action:Action) :: rest =>
+        println(s"person: $person, sentiment: $sentiment, action: $action")
+        println(s"the rest: $rest")
         //SpeakerSentimentForAScene(d, f, )
         None
-      case _ =>
-        println("kkkk")
+      case other =>
+        println(other)
         None
     }
   }
