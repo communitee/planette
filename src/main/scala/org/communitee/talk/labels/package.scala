@@ -1,6 +1,6 @@
 package org.communitee.talk
 
-import org.communitee.talk.meanings.Sentiment
+import org.communitee.talk.meanings._
 
 /**
   * Created by root on 02/01/18.
@@ -14,6 +14,8 @@ package object labels {
       else
         simpleName.replace("$", "")
     }
+
+    def toMeaning: Option[Meaning] = None
   }
   trait Location extends Label
   object Labeless extends Label
@@ -24,21 +26,19 @@ package object labels {
 
   object Speaker extends Person
 
-  trait Action extends Label
+  object Schedule extends Schedule with Label
 
-  trait Schedule extends Label
-  object Schedule extends Schedule
-  trait SchedulingAction extends Schedule with Action
-  object SchedulingAction extends SchedulingAction
-  trait State extends Label
+  object SchedulingAction extends SchedulingAction with Label
+  object SchedulingActionOf extends SchedulingAction with Label
+
 
   object Somewhere extends Location
 
-  trait Time extends Label
+
   object Sometime extends Time
 
-  trait Future extends Time
-  object Future extends Future
+
+  object Future extends Future with Label
 
   object Past extends Time
 
@@ -58,21 +58,13 @@ package object labels {
 
   object Execute extends Label
 
-  trait Profession extends Label
+  object Doctor extends meanings.Doctor with Label{
+    override def toMeaning = Some(this.asInstanceOf[meanings.Doctor])
+  }
 
-  trait Professional extends Label with Profession
-
-  trait Medicine extends Profession
-
-  object Doctor extends Professional with Medicine
-
-  trait Place extends Label
-
-  trait Meeting extends Label
-
-  trait Appointment extends Meeting with Time with Place
-
-  object Appointment extends Appointment
+  object Appointment extends Appointment with Label{
+    override def toMeaning = Some(this.asInstanceOf[meanings.Appointment])
+  }
 
 
 }

@@ -355,7 +355,13 @@ package object terms {
   trait Schedule extends Term {
     override def processLabels = predecessor.get match{
       case None => Some(labels.Schedule)
-      case Some(To) => Some(SchedulingAction)
+      case Some(To) =>
+        successor.get match {
+          case Some(A) =>
+            Some (SchedulingActionOf)
+          case other =>
+            Some (SchedulingAction)
+        }
     }
   }
   object Schedule extends Schedule

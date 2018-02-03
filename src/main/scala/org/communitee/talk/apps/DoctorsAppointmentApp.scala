@@ -1,20 +1,16 @@
 package org.communitee.talk
 package apps
 
-import terms._
-import WouldImpl._
-import LikeImpl._
-import ToImpl._
-import DoImpl._
-import ScheduleImpl._
-import AImpl._
-import DoctorImpl._
-import AppointmentImpl._
-import WhatImpl._
-import YouImpl._
-import MeanImpl._
-import org.communitee.talk.labels.{Action, Labeless, Person}
-import org.communitee.talk.meanings.{Scene, Sentiment, SentimentRegarding}
+import org.communitee.talk.labels._
+import org.communitee.talk.meanings.{Person => _, _}
+import org.communitee.talk.terms.AImpl._
+import org.communitee.talk.terms.AppointmentImpl._
+import org.communitee.talk.terms.DoctorImpl._
+import org.communitee.talk.terms.LikeImpl._
+import org.communitee.talk.terms.ScheduleImpl._
+import org.communitee.talk.terms.ToImpl._
+import org.communitee.talk.terms.WouldImpl._
+import org.communitee.talk.terms._
 
 
 /**
@@ -47,9 +43,18 @@ object Kernel{
       case (person:Person) :: (sentiment:Sentiment) :: (action:Action) :: rest =>
         println(s"person: $person, sentiment: $sentiment, action: $action")
         println(s"the rest: $rest")
-        SentimentRegarding[Scene](sentiment, new Scene {
-          override val events: scala.List[meanings.Event] = Nil
-        })
+        action match {
+          case a: StateProducingAction =>
+            a.getState(rest.map(_.toMeaning).filter(_.isDefined).map(_.get)) match {
+              case Some(state) => SentimentRegarding[State] (sentiment, state)
+              case None => None
+            }
+          case b: SceneProducingAction =>
+            SentimentRegarding[Scene](sentiment, new Scene {
+              override val events: scala.List[meanings.Event] = Nil
+            })
+        }
+
         None
       case other =>
         println(other)
