@@ -54,6 +54,8 @@ object Kernel{
     }
   }
 
+  def getInternalReaction(meaning: Meaning): Option[Reaction] = None
+
   def getCourseOfAction(meaning: Meaning): Option[CourseOfAction] = None
 
   def executeCourseOfAction(courseOfAction: CourseOfAction): Option[Outcome] = None
