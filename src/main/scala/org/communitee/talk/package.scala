@@ -1,5 +1,6 @@
 package org.communitee
 
+import org.communitee.talk.meanings.Meaning
 import org.communitee.talk.terms.Term
 
 /**
@@ -10,5 +11,10 @@ package object talk {
 
   trait CourseOfAction
 
+  trait Reaction{
+    val meaning: Meaning
+  }
+
   trait Outcome
 }
+
