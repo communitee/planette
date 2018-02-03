@@ -27,31 +27,7 @@ package object meanings {
   }
   trait Schedulable extends Meaning
   trait ScheduleRequest extends Meaning
-  trait SchedulingScene extends Meaning{
-
-    val scheduler: Scheduler
-    val schedulable: Schedulable
-
-    def scene:Scene = {
-       new Scene
-          {
-         override val events: List[Event] = List(new Event {
-           override type Happening = ScheduleRequest => Schedulable
-           override val location: Location = Somewhere
-
-           override val happening: ScheduleRequest => Schedulable = scheduler.make
-           override val time: Time = Sometime
-         })
-       }
-    }
-
-
-  }
-
-
-  case class To()
-
-
+  
   trait SentimentForAScene extends Meaning{
     val sentiment: Sentiment
     val scene: Scene
