@@ -13,7 +13,8 @@ import AppointmentImpl._
 import WhatImpl._
 import YouImpl._
 import MeanImpl._
-import org.communitee.talk.labels.{Action, Labeless, Person, Sentiment}
+import org.communitee.talk.labels.{Action, Labeless, Person}
+import org.communitee.talk.meanings.{Scene, Sentiment, SentimentRegarding}
 
 
 /**
@@ -46,7 +47,9 @@ object Kernel{
       case (person:Person) :: (sentiment:Sentiment) :: (action:Action) :: rest =>
         println(s"person: $person, sentiment: $sentiment, action: $action")
         println(s"the rest: $rest")
-        //SpeakerSentimentForAScene(d, f, )
+        SentimentRegarding[Scene](sentiment, new Scene {
+          override val events: scala.List[meanings.Event] = Nil
+        })
         None
       case other =>
         println(other)

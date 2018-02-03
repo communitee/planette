@@ -57,7 +57,7 @@ package object meanings {
     val scene: Scene
   }
 
-  case class SpeakerSentimentForAScene(speaker: Person, sentiment: Sentiment, scene: Scene)
+  case class SentimentRegarding[A](sentiment: Sentiment, a:A)
 
   trait Time extends Meaning
   trait AbstractTime extends Time

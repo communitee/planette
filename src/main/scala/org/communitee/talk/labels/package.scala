@@ -1,5 +1,7 @@
 package org.communitee.talk
 
+import org.communitee.talk.meanings.Sentiment
+
 /**
   * Created by root on 02/01/18.
   */
@@ -46,9 +48,9 @@ package object labels {
 
   object FutureState extends State with Future
 
-  trait Sentiment extends Label
+  //trait Sentiment extends Label
 
-  object Wish extends Sentiment
+  object Wish extends Sentiment with Label
 
   object Like extends Sentiment
 
